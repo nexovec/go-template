@@ -1,0 +1,9 @@
+go 1.22.3
+
+use (
+	.
+	./internal/app
+	./internal/configuration
+	./internal/models
+	./internal/templates
+)

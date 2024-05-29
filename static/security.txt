@@ -1,0 +1,6 @@
+Open an issue in our [go template repository](https://github.com/nexovec/go-template).
+
+> If you think someone else unintentionally left our security notice in their program, do post contact details into an issue and DON'T include the security report.
+
+Until end of beta plain text is okay. You should receive a response within 72 hours.
+Time to patch is 30 days, we will negotiate in case of any delays.

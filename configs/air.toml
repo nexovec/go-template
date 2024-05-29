@@ -1,0 +1,60 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+pre_cmd = [
+    "go work sync",
+    "go work vendor",
+    "/go/bin/migrate -database postgres://postgres:postgres@postgres:5432/main?sslmode=disable -path internal/models/migrations up",
+    "/go/bin/sqlc generate --file configs/sqlc.yml",
+    "/go/bin/templ generate",
+    ]
+
+# cmd = "go build -o ./executable -gcflags '-N -l'" # Unoptimized build
+cmd = "go build -o ./executable"
+bin = "executable"
+
+# Watch these filename extensions.
+include_ext = ["go", "html", "css", "js", "conf", "templ", "sql", "toml", "yaml", "yml"]
+exclude_dir = ["tmp", "vendor", "logs", "static", "scripts"]
+include_file = [
+    "./internal/templates/v1/*.templ",
+    "./internal/templates/v2/*.templ",
+    "./internal/models/main.go",
+    "./internal/models/queries/*.sql",
+    "./internal/models/migrations/*.sql"
+    ]
+exclude_file = [ # FIXME: wildcards are not working
+    "./configs/*.ini",
+    "./configs/*.yml",
+    "./internal/models/*.sql.go",
+    "internal/templates/v1/*.go",
+    "internal/templates/v2/*.go",
+    "internal/models/*.go"
+    ]
+# This log file places in your tmp_dir.
+log = "./tmp/air.log"
+# It's not necessary to trigger build each time file changes if it's too frequent.
+delay = 2000 # ms
+# Stop running old binary when build errors occur.
+stop_on_error = true
+# Send Interrupt signal before killing process (windows does not support this feature)
+send_interrupt = true
+rerun = false
+# Delay after sending Interrupt signal
+kill_delay = 5000 # ms
+
+[log]
+# Show log time
+time = false
+
+[color]
+# Customize each part's color. If no color found, use the raw app log.
+main = "magenta"
+watcher = "cyan"
+build = "yellow"
+runner = "green"
+
+[misc]
+# Delete tmp directory on exit
+clean_on_exit = true
