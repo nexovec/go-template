@@ -1,0 +1,4 @@
+db_connection_pool_size: 20
+db_statement_cache_capacity: 1000
+max_server_start_retries: 10
+graceful_shutdown_timeout: 5s

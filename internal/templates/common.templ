@@ -1,0 +1,94 @@
+package templates
+
+
+templ Empty() {
+
+}
+
+// client side redirect
+
+script RedirectWithTimeout(url string, timeoutMs int) {
+	redirectWithTimeout(url, timeoutMs);
+}
+
+
+// client side redirect
+
+script Redirect(url string) {
+	window.location.href=url;
+}
+
+templ LazySwapComponent(TargetID string, urlPath string) {
+	<div hx-target={TargetID} hx-trigger="load" hx-get={urlPath}></div>
+}
+
+templ ContentComponent(contents templ.Component) {
+	<main class="container">
+		@contents
+		{ children... }
+	</main>
+}
+
+templ LinkTag(link string) {
+	<link rel="stylesheet" href={ link }/>
+}
+
+templ ScriptTag(link string, isModule bool, deferredLoad bool, asyncLoad bool) {
+	<script src={ link } if isModule {
+	type="module"
+} if deferredLoad {
+	defer
+} if asyncLoad {
+	async
+}></script>
+	// FIXME: wtf, async scripts get rendered as async="", report this
+	// FIXME: you can't put a comment into the if statement, retest and report this
+}
+
+templ Concatenate(components []templ.Component) {
+	for _, c := range components {
+		@c
+	}
+}
+
+templ NotFoundComponent() {
+	// TODO:
+	<h1 class="title is-3">Page Not Found</h1>
+	<p>Sorry, the page you are looking for does not exist.</p>
+}
+
+templ NotImplementedComponent() {
+	// TODO:
+	<h1 class="title is-3">Not Implemented</h1>
+	<p>Sorry, we are still polishing this section.</p>
+}
+
+templ Boilerplate(contents templ.Component, imports templ.Component) {
+	<!DOCTYPE html>
+	<html lang="en" translate="no" data-lt-installed="true" class="vvgxkmuas idc0_343">
+		<head>
+			<script src="/static/js/debug.js"></script>
+			<script src="/static/js/custom.js" defer></script>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+			<meta name="google" content="notranslate"/>
+			<meta
+				name="description"
+				content="Here goes the keywords of the page, separated by commas. This is a good practice for SEO."
+			/>
+			<title>Chatlearning.ai</title>
+			<link rel="icon" type="image/png" href="/favicon.png"/>
+			<link rel="apple-touch-icon" href="/favicon.png"/>
+			// <link href="https://cdn.jsdelivr.net/npm/beercss@3.4.13/dist/cdn/beer.min.css" rel="stylesheet"/>
+			// <script type="module" src="https://cdn.jsdelivr.net/npm/beercss@3.4.13/dist/cdn/beer.min.js"></script>
+			@imports
+		</head>
+		<body>
+			@contents
+			<div id="load-time" style="position: fixed; bottom: 0; left: 100px; background-color: #f0f0f0; padding: 2px; font-family: monospace; word-spacing: -5px; letter-spacing: -1px; color: black;">
+				Loading...
+			</div>
+		</body>
+	</html>
+}

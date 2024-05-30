@@ -3,8 +3,8 @@ tmp_dir = "tmp"
 
 [build]
 pre_cmd = [
-    "go work sync",
-    "go work vendor",
+    # "go work sync",
+    # "go work vendor",
     "/go/bin/migrate -database postgres://postgres:postgres@postgres:5432/main?sslmode=disable -path internal/models/migrations up",
     "/go/bin/sqlc generate --file configs/sqlc.yml",
     "/go/bin/templ generate",
@@ -28,8 +28,8 @@ exclude_file = [ # FIXME: wildcards are not working
     "./configs/*.ini",
     "./configs/*.yml",
     "./internal/models/*.sql.go",
-    "internal/templates/v1/*.go",
-    "internal/templates/v2/*.go",
+    "internal/templates/*.go",
+    "internal/templates/*/*.go",
     "internal/models/*.go"
     ]
 # This log file places in your tmp_dir.

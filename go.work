@@ -6,4 +6,5 @@ use (
 	./internal/configuration
 	./internal/models
 	./internal/templates
+	./internal/utils
 )

@@ -1,8 +1,10 @@
 package main
 
 import (
+	"app"
 	"configuration"
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"os"
@@ -11,6 +13,7 @@ import (
 	"strings"
 	"syscall"
 	"time"
+	"utils"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/helmet"
@@ -25,11 +28,8 @@ func main() {
 	var err error
 	// validating the environment variables
 	{
-		err := godotenv.Load("./configs/envfiles/.app.dev.env")
-		if err != nil {
-			panic(err)
-		}
-		lo.Must(configuration.GetAppConfiguration())
+		lo.Must0(godotenv.Load("./configs/envfiles/.app.dev.env"))
+		lo.Must(configuration.GetAppDeploymentConfiguration())
 	}
 
 	// initialize default logger
@@ -39,14 +39,14 @@ func main() {
 		slog.SetDefault(slogger)
 	}
 
-	// start the application
+	// create the server
 	rootHandler := fiber.New(fiber.Config{
-		AppName: lo.Must(configuration.GetAppConfiguration()).AppName,
+		AppName: lo.Must(configuration.GetAppDeploymentConfiguration()).AppName,
 	})
 
 	// initialize middlewares
 	{
-		// recover
+		// recover after panic
 		rootHandler.Use(recover.New())
 
 		// logging
@@ -84,19 +84,25 @@ func main() {
 		slog.Info("Launching application server", "Git commit ID", commitID)
 	}
 
+	// initialize submodules
+	environ := lo.Must(configuration.GetAppDeploymentConfiguration())
+	cfg := lo.Must(configuration.GetAppConfiguration())
+	lo.Must0(utils.Initialize())
+
 	// set up routes
 	{
-		rootHandler.Static("/static", "./static")
 		rootHandler.Get("/favicon.ico", func(c fiber.Ctx) error {
 			return c.Redirect().To("/static/favicon.ico")
 		})
+		rootHandler.Get("/favicon.ico", func(c fiber.Ctx) error { return c.Redirect().To("https://bulma.io/images/bulma-logo.png") })
+
 		rootHandler.Get("/health", func(c fiber.Ctx) error {
 			return c.Redirect().To("/healthcheck")
 		})
 		rootHandler.All("/healthcheck", func(c fiber.Ctx) error {
 			return c.SendString("ALIVE")
 		})
-		rootHandler.Get("/favicon.ico", func(c fiber.Ctx) error { return c.Redirect().To("https://bulma.io/images/bulma-logo.png") })
+
 		rootHandler.Get("/security.txt", func(c fiber.Ctx) error {
 			return c.Redirect().To("/.well-known/security.txt")
 		})
@@ -106,6 +112,10 @@ func main() {
 		rootHandler.Get("/robots.txt", func(c fiber.Ctx) error {
 			return c.SendFile("./static/robots.txt")
 		})
+
+		rootHandler.Static("/static", "./static")
+
+		app.RegisterRoutes(rootHandler)
 
 		// default error pages
 		rootHandler.All("*", func(c fiber.Ctx) error {
@@ -122,19 +132,24 @@ func main() {
 		syscall.SIGTERM,
 		syscall.SIGQUIT)
 	go func() { // start the server with retry
-		max_retries := 15
 		retry := 0
-		err := rootHandler.Listen(fmt.Sprintf("0.0.0.0:%s", os.Getenv("APP_PORT")), fiber.ListenConfig{
-			EnablePrefork: false,
-		})
 		retry_delay := 1 * time.Second
-		for err != nil && retry < max_retries {
+		err = errors.New("server hasn't attempted to start yet")
+		for err != nil && retry < cfg.MaxServerStartRetries {
+			host := environ.AppHost
+			port := environ.AppPort
+			slog.Warn("Server start", "host", host, "port", port)
+			err = rootHandler.Listen(fmt.Sprintf("%s:%s", environ.AppHost, environ.AppPort), fiber.ListenConfig{
+				EnablePrefork: false,
+			})
+			if err == nil {
+				break
+			}
 			retry++
 			slog.Error("Failed to start the server", "error", err, "retrying in", retry_delay)
 			retry_delay *= 2
 			retry_delay = max(retry_delay, 10*time.Second)
 			time.Sleep(retry_delay)
-			err = rootHandler.Listen(fmt.Sprintf("0.0.0.0:%s", os.Getenv("APP_PORT")))
 		}
 		slog.Error("Failed to start the server", "error", err)
 		os.Exit(1)
@@ -142,7 +157,7 @@ func main() {
 
 	// do cleanup
 	slog.Info("received signal", "signal", <-sigc)
-	gracefulShutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second) // TODO: make this configurable
+	gracefulShutdownCtx, cancel := context.WithTimeout(context.Background(), cfg.GracefulShutdownTimeout)
 	defer cancel()
 	err = rootHandler.ShutdownWithContext(gracefulShutdownCtx)
 	if err != nil {
