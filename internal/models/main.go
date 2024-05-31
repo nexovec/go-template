@@ -2,6 +2,7 @@ package models
 
 import (
 	"configuration"
+
 	"context"
 	"fmt"
 	"log/slog"
@@ -24,7 +25,7 @@ func Initialize() {
 	initCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// configure the connection pool
+	// configures the connection pool
 	cfg := lo.Must(configuration.GetAppConfiguration())
 	if !strings.Contains(dsn, "pool_max_conns") {
 		size_str := fmt.Sprintf(" pool_max_conns=%d", cfg.DbConnectionPoolSize)
@@ -51,7 +52,7 @@ func Initialize() {
 		panic(err)
 	}
 	Pool = pool
-	// ping connection if not in production
+	// pings connection if not in production
 	if os.Getenv("DEPLOYMENT") == configuration.EnumDeploymentDev || os.Getenv("DEPLOYMENT") == configuration.EnumDeploymentDebug {
 		conns := pool.AcquireAllIdle(initCtx)
 		for _, conn := range conns {
@@ -61,7 +62,7 @@ func Initialize() {
 			}
 			conn.Release()
 		}
-		// create mock accounts
+		// creates mock accounts
 		pwd := "admin"
 		_, err = New(pool).InsertUser(initCtx, "admin", "admin@admin.admin", pwd)
 		if err != nil && err.Error() != configuration.ErrUserExists && err.Error() != configuration.ErrNoRows {

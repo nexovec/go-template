@@ -7,7 +7,7 @@ sql:
   queries:
     - ../internal/models/queries/
   database:
-    uri: postgresql://postgres:postgres@postgres:5432/main?sslmode=disable # SECURITY: is this safe?
+    uri: postgresql://postgres:postgres@localhost:5432/main?sslmode=disable # SECURITY: is this safe?
   strict_function_checks: true
   gen:
     go:

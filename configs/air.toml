@@ -6,8 +6,8 @@ pre_cmd = [
     # "go work sync",
     # "go work vendor",
     "/go/bin/migrate -database postgres://postgres:postgres@postgres:5432/main?sslmode=disable -path internal/models/migrations up",
-    "/go/bin/sqlc generate --file configs/sqlc.yml",
-    "/go/bin/templ generate",
+    # "/go/bin/sqlc generate --file configs/sqlc-in-container.yml",
+    # "/go/bin/templ generate",
     ]
 
 # cmd = "go build -o ./executable -gcflags '-N -l'" # Unoptimized build
@@ -24,13 +24,13 @@ include_file = [
     "./internal/models/queries/*.sql",
     "./internal/models/migrations/*.sql"
     ]
-exclude_file = [ # FIXME: wildcards are not working
-    "./configs/*.ini",
-    "./configs/*.yml",
-    "./internal/models/*.sql.go",
-    "internal/templates/*.go",
-    "internal/templates/*/*.go",
-    "internal/models/*.go"
+exclude_file = [
+    # "./configs/*.ini",
+    # "./configs/*.yml",
+    # "./internal/models/*.sql.go",
+    # "internal/templates/*.go",
+    # "internal/templates/*/*.go",
+    # "internal/models/*.go"
     ]
 # This log file places in your tmp_dir.
 log = "./tmp/air.log"

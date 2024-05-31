@@ -1,21 +1,90 @@
 package templates
 
 templ Homepage() {
-	<header class="container">
-		<nav>
-			<ul>
-				<li><strong>Acme Corp</strong></li>
-			</ul>
-			<ul>
-				<li><a href="#">About</a></li>
-				<li><a href="#">Services</a></li>
-				<li><a href="#">Products</a></li>
-			</ul>
-		</nav>
-	</header>
-	<main class="container-fluid">
-		<div id="graph" style="height: 600px;"></div>
-		// <div hx-post="/graph" hx-swap="innerHTML" hx-trigger="load"></div>
+	@Navbar()
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <p class="title">Primary hero</p>
+            <p class="subtitle">Primary subtitle</p>
+        </div>
+    </section>
+	<main class="container">
+		<div clas="fixed-grid has-2-columns">
+			<div class="grid">
+				<div class="cell" style="height: 50vh;">
+					<div id="graph" style="height: 100%;"></div>
+				</div>
+				<div class="cell">
+					<div id="graph" style="height: 100%;"></div>
+				</div>
+			</div>
+		</div>
 	</main>
-	<footer class="container"></footer>
+	<footer class="footer">
+    <p>Copyright 2024</p>
+    </footer>
+}
+
+templ Navbar() {
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="localhost:3000">
+        Go template
+    </a>
+
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item">
+        Home
+      </a>
+
+      <a class="navbar-item">
+        Documentation
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More
+        </a>
+
+        <div class="navbar-dropdown">
+          <a class="navbar-item">
+            About
+          </a>
+          <a class="navbar-item is-selected">
+            Jobs
+          </a>
+          <a class="navbar-item">
+            Contact
+          </a>
+          <hr class="navbar-divider"/>
+          <a class="navbar-item">
+            Report an issue
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-primary">
+            <strong>Sign up</strong>
+          </a>
+          <a class="button is-light">
+            Log in
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
 }

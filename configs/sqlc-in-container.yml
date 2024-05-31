@@ -1,0 +1,23 @@
+version: "2"
+sql:
+- name: internal
+  engine: postgresql
+  schema:
+    - ../internal/models/migrations/
+  queries:
+    - ../internal/models/queries/
+  database:
+    uri: postgresql://postgres:postgres@postgres:5432/main?sslmode=disable # SECURITY: is this safe?
+  strict_function_checks: true
+  gen:
+    go:
+      package: models
+      out: ../internal/models
+      sql_package: pgx/v5
+      emit_json_tags: true
+      emit_pointers_for_null_types: true
+      emit_all_enum_values: true
+      emit_enum_valid_method: true
+      emit_exported_queries: false
+      json_tags_case_style: snake
+      query_parameter_limit: 3

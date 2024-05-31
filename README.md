@@ -18,6 +18,19 @@ You need to have go 1.22 and docker installed. Primarily, only linux is supporte
 
 You can launch the project with `docker compose up --build`.
 
+You should run `templ generate --watch` to watch for changes to template directories.
+
+-----
+
+You might need to run `go work sync && go work vendor` as sudo when adding new packages.
+
+
+You can run  `sqlc generate --file configs/sqlc.yml` to generate accessor functions for new SQL commands in `internal/moels/queries`
+
+> you can uncomment the command in `configs/air.toml` to get "hot-reload" (but it's quite slow).
+
+You might need to run `pnpm install` to get tools to be able to build client-side css and javascript.
+
 ## The tech
 
 ### Postgres

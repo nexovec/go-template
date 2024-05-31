@@ -67,7 +67,7 @@ func main() {
 		rootHandler.Use(helmet.New())
 
 		// profiling
-		if lo.Must(configuration.GetAppDeploymentConfiguration()).Deployment == configuration.EnumDeploymentDev {
+		if configuration.EnumDeploymentProd != lo.Must(configuration.GetAppDeploymentConfiguration()).Deployment {
 			pprof.New(pprof.Config{})
 		}
 	}

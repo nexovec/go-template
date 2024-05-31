@@ -1,0 +1,18 @@
+<div hx-target=\"
+\" hx-trigger=\"load\" hx-get=\"
+\"></div>
+<main class=\"container\">
+</main>
+<link rel=\"stylesheet\" href=\"
+\">
+<script src=\"
+\"
+ type=\"module\"
+ defer
+ async
+></script>
+<h1 class=\"title is-3\">Page Not Found</h1><p>Sorry, the page you are looking for does not exist.</p>
+<h1 class=\"title is-3\">Not Implemented</h1><p>Sorry, we are still polishing this section.</p>
+<!doctype html><html lang=\"en\" translate=\"no\" data-lt-installed=\"true\" class=\"vvgxkmuas idc0_343\"><head><script src=\"/static/js/debug.js\"></script><script type=\"importmap\">\n\t\t\t{\n\t\t\t\t\"imports\": {\n\t\t\t\t\t\"echarts\": \"/static/js/echarts.esm.js\",\n\t\t\t\t\t\"custom\": \"/static/js/custom.esm.js\",\n\t\t\t\t\t\"lodash\": \"/static/js/lodash.js\"\n\t\t\t\t}\n\t\t\t}\n\t\t\t</script><script src=\"/static/js/custom.esm.js\" type=\"module\"></script><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\"><meta name=\"google\" content=\"notranslate\"><meta name=\"description\" content=\"Here goes the keywords of the page, separated by commas. This is a good practice for SEO.\"><title>Go template</title><link rel=\"icon\" type=\"image/png\" href=\"/favicon.png\"><link rel=\"apple-touch-icon\" href=\"/favicon.png\">
+</head><body>
+<div id=\"load-time\" style=\"position: fixed; bottom: 0; left: 100px; background-color: #f0f0f0; padding: 2px; font-family: monospace; word-spacing: -5px; letter-spacing: -1px; color: black;\">Loading...</div></body></html>
