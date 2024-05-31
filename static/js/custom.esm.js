@@ -23,6 +23,8 @@ Array.from(chartDomElems).forEach((elem) => {
       }
     ]
   };
-
+  window.addEventListener('resize', function() {
+    chart.resize();
+  });
   option && chart.setOption(option);
 });

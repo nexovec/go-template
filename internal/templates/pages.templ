@@ -1,27 +1,25 @@
 package templates
 
 templ Homepage() {
-    <header>
-	    @Navbar()
-    </header>
+	<header>
+		@Navbar()
+	</header>
 	<section class="hero is-primary">
 		<div class="hero-body">
 			<p class="title">Primary hero</p>
 			<p class="subtitle">Primary subtitle</p>
 		</div>
 	</section>
-	<main class="container">
-		<div clas="fixed-grid">
-			<div class="grid has-6-columns">
-				<div class="cell is-3-columns">
-					<div id="graph" style="height: 50vh;"></div>
-				</div>
-				<div class="cell is-3-columns">
-					<div id="graph" style="height: 50vh;"></div>
-				</div>
+	<div clas="fixed-grid">
+		<div class="grid has-6-columns">
+			<div class="cell is-3-columns" style="min-height: 50vh;">
+				<div id="graph" style="min-height: 50vh; max-width: 50vw;"></div>
+			</div>
+			<div class="cell is-3-columns">
+				<div id="graph" style="min-height: 50vh; max-width: 50vw;"></div>
 			</div>
 		</div>
-	</main>
+	</div>
 	<footer class="footer">
 		<p>Copyright 2024</p>
 	</footer>
