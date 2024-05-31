@@ -1,54 +1,30 @@
 package templates
 
 templ Homepage() {
-	@Navbar()
-	<div class="columns is-gapless">
-		<div class="column is-1">
-			@Sidebar()
+    <header>
+	    @Navbar()
+    </header>
+	<section class="hero is-primary">
+		<div class="hero-body">
+			<p class="title">Primary hero</p>
+			<p class="subtitle">Primary subtitle</p>
 		</div>
-		<div class="column auto">
-			<section class="hero is-primary">
-				<div class="hero-body">
-					<p class="title">Primary hero</p>
-					<p class="subtitle">Primary subtitle</p>
+	</section>
+	<main class="container">
+		<div clas="fixed-grid">
+			<div class="grid has-6-columns">
+				<div class="cell is-3-columns">
+					<div id="graph" style="height: 50vh;"></div>
 				</div>
-			</section>
-			<main class="container">
-				<div clas="fixed-grid">
-					<div class="grid has-6-columns">
-						<div class="cell is-3-columns">
-							<div id="graph" style="height: 50vh;"></div>
-						</div>
-						<div class="cell is-3-columns" >
-							<div id="graph" style="height: 50vh;"></div>
-						</div>
-					</div>
+				<div class="cell is-3-columns">
+					<div id="graph" style="height: 50vh;"></div>
 				</div>
-			</main>
-			<footer class="footer">
-				<p>Copyright 2024</p>
-			</footer>
+			</div>
 		</div>
-	</div>
-}
-
-templ Sidebar() {
-	<div class="fixed-grid">
-		<div class="cell">
-			<aside class="menu pt-6 pb-6">
-				<p class="menu-label">General</p>
-				<ul class="menu-list">
-					<li><a>Dashboard</a></li>
-					<li><a>Sensors</a></li>
-				</ul>
-				<p class="menu-label">Administration</p>
-				<ul class="menu-list">
-					<li><a>Reports</a></li>
-					<li><a>Monitoring</a></li>
-				</ul>
-			</aside>
-		</div>
-	</div>
+	</main>
+	<footer class="footer">
+		<p>Copyright 2024</p>
+	</footer>
 }
 
 templ Navbar() {
@@ -67,14 +43,17 @@ templ Navbar() {
 		<div class="navbar-menu">
 			<div class="navbar-start">
 				<a class="navbar-item">
-					Home
+					Dashboard
 				</a>
 				<a class="navbar-item">
-					Documentation
+					Sensors
+				</a>
+				<a class="navbar-item">
+					Reports
 				</a>
 				<div class="navbar-item has-dropdown is-hoverable">
 					<a class="navbar-link">
-						More
+						Documentation
 					</a>
 					<div class="navbar-dropdown">
 						<a class="navbar-item">
