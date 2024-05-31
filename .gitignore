@@ -3,3 +3,6 @@ tmp
 output.svg
 main
 executable
+trace
+*.log
+node_modules

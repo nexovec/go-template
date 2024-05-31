@@ -68,11 +68,22 @@ templ Boilerplate(contents templ.Component, imports templ.Component) {
 	<html lang="en" translate="no" data-lt-installed="true" class="vvgxkmuas idc0_343">
 		<head>
 			<script src="/static/js/debug.js"></script>
-			<script src="/static/js/custom.js" defer></script>
+			<script type="importmap">
+			{
+				"imports": {
+					"echarts": "/static/js/echarts.esm.js",
+					"custom": "/static/js/custom.esm.js",
+					"lodash": "/static/js/lodash.js"
+				}
+			}
+			</script>
+			<script src="/static/js/custom.esm.js" type="module"></script>
+
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
 			<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
 			<meta name="google" content="notranslate"/>
+			<meta name="color-scheme" content="light dark" /> // pico css only
 			<meta
 				name="description"
 				content="Here goes the keywords of the page, separated by commas. This is a good practice for SEO."
@@ -80,8 +91,6 @@ templ Boilerplate(contents templ.Component, imports templ.Component) {
 			<title>Chatlearning.ai</title>
 			<link rel="icon" type="image/png" href="/favicon.png"/>
 			<link rel="apple-touch-icon" href="/favicon.png"/>
-			// <link href="https://cdn.jsdelivr.net/npm/beercss@3.4.13/dist/cdn/beer.min.css" rel="stylesheet"/>
-			// <script type="module" src="https://cdn.jsdelivr.net/npm/beercss@3.4.13/dist/cdn/beer.min.js"></script>
 			@imports
 		</head>
 		<body>

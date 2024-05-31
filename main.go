@@ -67,7 +67,9 @@ func main() {
 		rootHandler.Use(helmet.New())
 
 		// profiling
-		pprof.New(pprof.Config{Prefix: "/monitoring"})
+		if lo.Must(configuration.GetAppDeploymentConfiguration()).Deployment == configuration.EnumDeploymentDev {
+			pprof.New(pprof.Config{})
+		}
 	}
 
 	// log current configuration
@@ -134,7 +136,7 @@ func main() {
 	go func() { // start the server with retry
 		retry := 0
 		retry_delay := 1 * time.Second
-		err = errors.New("server hasn't attempted to start yet")
+		err = errors.New("server hasn't even attempted to start")
 		for err != nil && retry < cfg.MaxServerStartRetries {
 			host := environ.AppHost
 			port := environ.AppPort

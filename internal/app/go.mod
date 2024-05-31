@@ -2,7 +2,11 @@ module app
 
 go 1.22
 
-require github.com/gofiber/fiber/v3 v3.0.0-beta.2
+require (
+	github.com/a-h/templ v0.2.707
+	github.com/go-echarts/go-echarts/v2 v2.3.3
+	github.com/gofiber/fiber/v3 v3.0.0-beta.2
+)
 
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect

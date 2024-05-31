@@ -1,0 +1,17 @@
+{
+  "name": "gotemplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "help": "echo \"PNPM is only used to get latest releases of js libraries in this project.\" && exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "echarts": "^5.5.0",
+    "lodash": "^4.17.21",
+    "preact": "^10.22.0"
+  }
+}
