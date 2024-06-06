@@ -4,7 +4,6 @@ import (
 	"app"
 	"configuration"
 	"context"
-	"errors"
 	"fmt"
 	"log/slog"
 	"os"
@@ -88,7 +87,7 @@ func main() {
 
 	// initialize submodules
 	environ := lo.Must(configuration.GetAppDeploymentConfiguration())
-	cfg := lo.Must(configuration.GetAppConfiguration())
+	cfg := lo.Must(configuration.GetGeneralConfiguration())
 	lo.Must0(utils.Initialize())
 
 	// set up routes
@@ -136,12 +135,12 @@ func main() {
 	go func() { // start the server with retry
 		retry := 0
 		retry_delay := 1 * time.Second
-		err = errors.New("server hasn't even attempted to start")
+		err := configuration.ErrServerRefusedToStart
 		for err != nil && retry < cfg.MaxServerStartRetries {
 			host := environ.AppHost
 			port := environ.AppPort
 			slog.Warn("Server start", "host", host, "port", port)
-			err = rootHandler.Listen(fmt.Sprintf("%s:%s", environ.AppHost, environ.AppPort), fiber.ListenConfig{
+			err = rootHandler.Listen(fmt.Sprintf("%s:%s", host, port), fiber.ListenConfig{
 				EnablePrefork: false,
 			})
 			if err == nil {
@@ -164,7 +163,6 @@ func main() {
 	err = rootHandler.ShutdownWithContext(gracefulShutdownCtx)
 	if err != nil {
 		slog.Error("Failed to shutdown the server", "error", err)
-		os.Exit(1)
 	}
 	slog.Info("Server is gracefully shutdown")
 	os.Exit(0)

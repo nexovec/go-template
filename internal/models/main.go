@@ -26,7 +26,7 @@ func Initialize() {
 	defer cancel()
 
 	// configures the connection pool
-	cfg := lo.Must(configuration.GetAppConfiguration())
+	cfg := lo.Must(configuration.GetGeneralConfiguration())
 	if !strings.Contains(dsn, "pool_max_conns") {
 		size_str := fmt.Sprintf(" pool_max_conns=%d", cfg.DbConnectionPoolSize)
 		slog.Info("Setting pool_max_conns", "value", cfg.DbConnectionPoolSize)
@@ -36,7 +36,7 @@ func Initialize() {
 	if err != nil {
 		panic(err)
 	}
-	config.ConnConfig.StatementCacheCapacity = lo.Must(configuration.GetAppConfiguration()).DbStatementCacheCapacity
+	config.ConnConfig.StatementCacheCapacity = lo.Must(configuration.GetGeneralConfiguration()).DbStatementCacheCapacity
 
 	config.AfterConnect = func(ctx context.Context, conn *pgx.Conn) error {
 		atomic.AddUint32(&totalPgxConnections, 1)

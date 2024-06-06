@@ -17,9 +17,12 @@ const (
 	EnumDeploymentDev   = "dev"
 	EnumDeploymentDebug = "debug"
 	EnumDeploymentProd  = "prod"
+)
 
-	ErrUserExists = "ERROR: User already exists (SQLSTATE P0001)"
-	ErrNoRows     = "no rows in result set"
+var (
+	ErrUserExists           = "ERROR: User already exists (SQLSTATE P0001)"
+	ErrNoRows               = "no rows in result set"
+	ErrServerRefusedToStart = errors.New("server hasn't even attempted to start")
 )
 
 //go:generate envdoc -output ../../environments.md
@@ -56,7 +59,7 @@ func GetAppDeploymentConfiguration() (AppDeploymentConfiguration, error) {
 	return appConfigurationInstance, nil
 }
 
-type AppConfiguration struct {
+type GeneralConfiguration struct {
 	DbConnectionPoolSize     int           `yaml:"db_connection_pool_size"`
 	DbStatementCacheCapacity int           `yaml:"db_statement_cache_capacity"`
 	MaxServerStartRetries    int           `yaml:"max_server_start_retries"`
@@ -64,7 +67,7 @@ type AppConfiguration struct {
 	isLoaded                 bool
 }
 
-func (conf AppConfiguration) Validate() error {
+func (conf GeneralConfiguration) Validate() error {
 	var errList []error
 
 	if conf.DbConnectionPoolSize <= 0 {
@@ -86,9 +89,9 @@ func (conf AppConfiguration) Validate() error {
 	return errors.Join(errList...)
 }
 
-var appConfigurationInstance AppConfiguration
+var appConfigurationInstance GeneralConfiguration
 
-func GetAppConfiguration() (AppConfiguration, error) {
+func GetGeneralConfiguration() (GeneralConfiguration, error) {
 	if appConfigurationInstance.isLoaded {
 		return appConfigurationInstance, nil
 	}
@@ -96,23 +99,23 @@ func GetAppConfiguration() (AppConfiguration, error) {
 	// load from file
 	conf, err := GetAppDeploymentConfiguration()
 	if err != nil {
-		return AppConfiguration{}, err
+		return GeneralConfiguration{}, err
 	}
 	filename := conf.MainConfigFile
 
 	file, err := os.OpenFile(filename, os.O_RDONLY, 0)
 	if err != nil {
-		return AppConfiguration{}, err
+		return GeneralConfiguration{}, err
 	}
 	defer file.Close()
 
 	err = yaml.NewDecoder(file).Decode(&appConfigurationInstance)
 	if err != nil {
-		return AppConfiguration{}, err
+		return GeneralConfiguration{}, err
 	}
 	err = appConfigurationInstance.Validate()
 	if err != nil {
-		return AppConfiguration{}, err
+		return GeneralConfiguration{}, err
 	}
 	appConfigurationInstance.isLoaded = true
 	return appConfigurationInstance, nil

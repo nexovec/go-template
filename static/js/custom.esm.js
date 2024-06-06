@@ -1,5 +1,4 @@
 import * as echarts from 'echarts';
-
 let chartDomElems = document.querySelectorAll('#graph');
 
 Array.from(chartDomElems).forEach((elem) => {
