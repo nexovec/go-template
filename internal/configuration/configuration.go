@@ -26,7 +26,7 @@ var (
 )
 
 //go:generate envdoc -output ../../environments.md
-type AppDeploymentConfiguration struct {
+type DeploymentConfiguration struct {
 	Deployment     string `env:"DEPLOYMENT"`
 	AppName        string `env:"APP_NAME"`
 	AppPort        string `env:"APP_PORT" envDefault:"80"`
@@ -36,23 +36,23 @@ type AppDeploymentConfiguration struct {
 	isLoaded       bool
 }
 
-var appDeploymentConfigurationInstance AppDeploymentConfiguration
+var deploymentConfiguration DeploymentConfiguration
 
-func GetAppDeploymentConfiguration() (AppDeploymentConfiguration, error) {
-	if appDeploymentConfigurationInstance.isLoaded {
-		return appDeploymentConfigurationInstance, nil
+func GetDeploymentConfig() (DeploymentConfiguration, error) {
+	if deploymentConfiguration.isLoaded {
+		return deploymentConfiguration, nil
 	}
-	appConfigurationInstance := AppDeploymentConfiguration{}
+	appConfigurationInstance := DeploymentConfiguration{}
 	opts := env.Options{RequiredIfNoDef: true}
 	if err := env.ParseWithOptions(&appConfigurationInstance, opts); err != nil {
 		slog.Error(".env parsing error", "detail", err)
-		return AppDeploymentConfiguration{}, err
+		return DeploymentConfiguration{}, err
 	}
 
 	// validation
 	allowedVals := []string{EnumDeploymentDev, EnumDeploymentDebug, EnumDeploymentProd}
 	if !slices.Contains(allowedVals, appConfigurationInstance.Deployment) {
-		return AppDeploymentConfiguration{}, fmt.Errorf("DEPLOYMENT must be one of: %v", allowedVals)
+		return DeploymentConfiguration{}, fmt.Errorf("DEPLOYMENT must be one of: %v", allowedVals)
 	}
 
 	appConfigurationInstance.isLoaded = true
@@ -64,6 +64,7 @@ type GeneralConfiguration struct {
 	DbStatementCacheCapacity int           `yaml:"db_statement_cache_capacity"`
 	MaxServerStartRetries    int           `yaml:"max_server_start_retries"`
 	GracefulShutdownTimeout  time.Duration `yaml:"graceful_shutdown_timeout"`
+	DbHealthcheckInterval    time.Duration `yaml:"db_health_check_interval"`
 	isLoaded                 bool
 }
 
@@ -89,15 +90,15 @@ func (conf GeneralConfiguration) Validate() error {
 	return errors.Join(errList...)
 }
 
-var appConfigurationInstance GeneralConfiguration
+var generalConfiguration GeneralConfiguration
 
-func GetGeneralConfiguration() (GeneralConfiguration, error) {
-	if appConfigurationInstance.isLoaded {
-		return appConfigurationInstance, nil
+func GetGeneralConfig() (GeneralConfiguration, error) {
+	if generalConfiguration.isLoaded {
+		return generalConfiguration, nil
 	}
 
 	// load from file
-	conf, err := GetAppDeploymentConfiguration()
+	conf, err := GetDeploymentConfig()
 	if err != nil {
 		return GeneralConfiguration{}, err
 	}
@@ -109,14 +110,14 @@ func GetGeneralConfiguration() (GeneralConfiguration, error) {
 	}
 	defer file.Close()
 
-	err = yaml.NewDecoder(file).Decode(&appConfigurationInstance)
+	err = yaml.NewDecoder(file).Decode(&generalConfiguration)
 	if err != nil {
 		return GeneralConfiguration{}, err
 	}
-	err = appConfigurationInstance.Validate()
+	err = generalConfiguration.Validate()
 	if err != nil {
 		return GeneralConfiguration{}, err
 	}
-	appConfigurationInstance.isLoaded = true
-	return appConfigurationInstance, nil
+	generalConfiguration.isLoaded = true
+	return generalConfiguration, nil
 }

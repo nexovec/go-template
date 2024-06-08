@@ -28,8 +28,13 @@ func main() {
 	// validating the environment variables
 	{
 		lo.Must0(godotenv.Load("./configs/envfiles/.app.dev.env"))
-		lo.Must(configuration.GetAppDeploymentConfiguration())
+		lo.Must(configuration.GetDeploymentConfig())
 	}
+
+	// initialize submodules
+	environ := lo.Must(configuration.GetDeploymentConfig())
+	cfg := lo.Must(configuration.GetGeneralConfig())
+	lo.Must0(utils.Initialize())
 
 	// initialize default logger
 	{
@@ -40,7 +45,7 @@ func main() {
 
 	// create the server
 	rootHandler := fiber.New(fiber.Config{
-		AppName: lo.Must(configuration.GetAppDeploymentConfiguration()).AppName,
+		AppName: lo.Must(configuration.GetDeploymentConfig()).AppName,
 	})
 
 	// initialize middlewares
@@ -66,7 +71,7 @@ func main() {
 		rootHandler.Use(helmet.New())
 
 		// profiling
-		if configuration.EnumDeploymentProd != lo.Must(configuration.GetAppDeploymentConfiguration()).Deployment {
+		if configuration.EnumDeploymentProd != lo.Must(configuration.GetDeploymentConfig()).Deployment {
 			pprof.New(pprof.Config{})
 		}
 	}
@@ -84,11 +89,6 @@ func main() {
 		commitID := strings.TrimSpace(string(output))
 		slog.Info("Launching application server", "Git commit ID", commitID)
 	}
-
-	// initialize submodules
-	environ := lo.Must(configuration.GetAppDeploymentConfiguration())
-	cfg := lo.Must(configuration.GetGeneralConfiguration())
-	lo.Must0(utils.Initialize())
 
 	// set up routes
 	{
