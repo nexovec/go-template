@@ -72,7 +72,7 @@ func main() {
 
 		// profiling
 		if configuration.EnumDeploymentProd != lo.Must(configuration.GetDeploymentConfig()).Deployment {
-			pprof.New(pprof.Config{})
+			rootHandler.Use(pprof.New(pprof.Config{}))
 		}
 	}
 
