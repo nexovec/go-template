@@ -18,6 +18,10 @@ script Redirect(url string) {
 	window.location.href=url;
 }
 
+templ Paragraph(text string) {
+	<p>{text}</p>
+}
+
 templ LazySwapComponent(TargetID string, urlPath string) {
 	<div hx-target={TargetID} hx-trigger="load" hx-get={urlPath}></div>
 }
